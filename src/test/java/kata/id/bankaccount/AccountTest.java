@@ -1,10 +1,11 @@
 package kata.id.bankaccount;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigDecimal;
 
 import org.junit.Test;
 
-import junit.framework.Assert;
 import kata.id.bankaccount.exception.InvalidAmountException;
 
 public class AccountTest {
@@ -20,7 +21,7 @@ public class AccountTest {
 		account.deposit(amount);
 
 		// THEN
-		Assert.assertEquals(account.getBalance(), amount);
+		 assertEquals(amount,account.getBalance() );
 	}
 
 	@Test
@@ -34,10 +35,9 @@ public class AccountTest {
 		account.withdraw(amountToWithdraw);
 
 		// THEN
-		Assert.assertEquals(account.getBalance(), BigDecimal.valueOf(-50));
+		 assertEquals(BigDecimal.valueOf(-50), account.getBalance());
 	}
 
-	
 	@Test(expected = InvalidAmountException.class)
 	public void given_an_amount_less_than_or_equal_0_then_the_deposit_throw_InvalidAmountException() {
 
@@ -48,7 +48,7 @@ public class AccountTest {
 		// WHEN
 		account.deposit(amount);
 	}
-	
+
 	@Test(expected = InvalidAmountException.class)
 	public void given_an_amount_less_than_or_equal_0_then_the_withdraw_throw_InvalidAmountException() {
 
@@ -59,4 +59,38 @@ public class AccountTest {
 		// WHEN
 		account.withdraw(amount);
 	}
+	
+	
+	@Test
+	public void should_transfer_amont_from_payer_to_another_payee() {
+		//	GIVEN
+		BigDecimal amount = BigDecimal.valueOf(100);
+		Account payer = new Account();
+		Account payee = new Account();
+		
+		// 	WHEN
+		payer.transfer(payee,amount);
+		
+		// 	THEN
+		 assertEquals( BigDecimal.valueOf(-100), payer.getBalance());
+		 assertEquals( BigDecimal.valueOf(100), payee.getBalance());
+		
+		
+	}
+	
+	
+	@Test(expected = InvalidAmountException.class)
+	public void given_an_amount_less_than_or_equal_0_then_the_transfer_throw_InvalidAmountException() {
+
+		//	GIVEN
+		BigDecimal amount = BigDecimal.valueOf(-22);
+		Account accountA = new Account();
+		Account accountB = new Account();
+		
+		// 	WHEN
+		accountA.transfer(accountB,amount);
+
+	 
+	}
+	
 }

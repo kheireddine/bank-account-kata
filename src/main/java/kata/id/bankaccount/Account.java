@@ -28,7 +28,17 @@ public class Account {
 		this.balance = this.balance.subtract(amount);
 	}
 
+	public void transfer(Account payee, BigDecimal amount) {
+		if (amount.longValue() <= 0) {
+			throw new InvalidAmountException("Invalid Amount");
+		}
+		this.withdraw(amount);
+		payee.deposit(amount);
+
+	}
+
 	public BigDecimal getBalance() {
 		return balance;
 	}
+
 }

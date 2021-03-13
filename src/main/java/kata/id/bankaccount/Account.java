@@ -2,6 +2,8 @@ package kata.id.bankaccount;
 
 import java.math.BigDecimal;
 
+import kata.id.bankaccount.exception.InvalidAmountException;
+
 public class Account {
 
 	private BigDecimal balance = BigDecimal.ZERO;
@@ -12,7 +14,7 @@ public class Account {
 
 	public void deposit(BigDecimal amount) {
 		if (amount.longValue() <= 0) {
-			throw new NumberFormatException("Amount invalid");
+			throw new InvalidAmountException("Invalid Amount");
 		}
 		this.balance = this.balance.add(amount);
 
@@ -20,11 +22,10 @@ public class Account {
 
 	public void withdraw(BigDecimal amount) {
 		if (amount.longValue() <= 0) {
-			throw new NumberFormatException("Amount invalid");
+			throw new InvalidAmountException("Invalid Amount");
 		}
 
 		this.balance = this.balance.subtract(amount);
-		System.out.println(this.balance);
 	}
 
 	public BigDecimal getBalance() {

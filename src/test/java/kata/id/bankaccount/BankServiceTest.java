@@ -3,6 +3,10 @@ package kata.id.bankaccount;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -10,13 +14,15 @@ import kata.id.bankaccount.exception.InvalidAmountException;
 
 public class BankServiceTest {
 	private BankService bankService = new BankService();
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@Test
 	public void should_deposit_in_the_account() {
 
 		// GIVEN
-
 		Account account = new Account();
+		LocalDate now = LocalDate.now();
+		String formatDate = now.format(formatter);
 
 		// WHEN
 		bankService.deposit(account, BigDecimal.valueOf(100));
@@ -24,6 +30,7 @@ public class BankServiceTest {
 		// THEN
 		assertEquals(BigDecimal.valueOf(100), account.getTransactions().get(0).getAmount());
 		assertEquals(TransactionType.DEPOSIT, account.getTransactions().get(0).getTransactionType());
+		assertEquals(formatDate, account.getTransactions().get(0).getDate().format(formatter));
 	}
 
 	@Test
@@ -31,6 +38,8 @@ public class BankServiceTest {
 
 		// GIVEN
 		Account account = new Account();
+		LocalDate now = LocalDate.now();
+		String formatDate = now.format(formatter);
 
 		// WHEN
 		bankService.withdraw(account, BigDecimal.valueOf(50));
@@ -38,6 +47,7 @@ public class BankServiceTest {
 		// THEN
 		assertEquals(BigDecimal.valueOf(50), account.getTransactions().get(0).getAmount());
 		assertEquals(TransactionType.WITHDRAW, account.getTransactions().get(0).getTransactionType());
+		assertEquals(formatDate, account.getTransactions().get(0).getDate().format(formatter));
 	}
 
 	@Test(expected = InvalidAmountException.class)
@@ -88,6 +98,35 @@ public class BankServiceTest {
 
 		// WHEN
 		bankService.transfer(payer, payee, amount);
+
+	}
+
+	@Test
+	public void should_return_transaction_history_for_account() {
+
+		// GIVEN
+		Account account = new Account();
+
+		bankService.deposit(account, BigDecimal.valueOf(100));
+		bankService.deposit(account, BigDecimal.valueOf(200));
+		bankService.deposit(account, BigDecimal.valueOf(300));
+
+		bankService.withdraw(account, BigDecimal.valueOf(50));
+		bankService.withdraw(account, BigDecimal.valueOf(150));
+
+		// WHEN
+		List<Transaction> transactionList = bankService.transactionHistory(account);
+
+		// THEN
+		assertEquals(5, transactionList.size());
+		assertEquals(BigDecimal.valueOf(100), transactionList.get(0).getAmount());
+		assertEquals(TransactionType.DEPOSIT, transactionList.get(0).getTransactionType());
+		
+		assertEquals(3, transactionList.stream().filter(tr -> tr.getTransactionType().equals(TransactionType.DEPOSIT))
+				.collect(Collectors.toList()).size());
+		
+		assertEquals(2, transactionList.stream().filter(tr -> tr.getTransactionType().equals(TransactionType.WITHDRAW))
+				.collect(Collectors.toList()).size());
 
 	}
 

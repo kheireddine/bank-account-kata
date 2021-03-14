@@ -2,6 +2,7 @@ package kata.id.bankaccount;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import kata.id.bankaccount.exception.InvalidAmountException;
 
@@ -34,6 +35,11 @@ public class BankService {
 
 		payer.addTransaction(Transaction.builder().amount(amount).date(LocalDate.now())
 				.transactionType(TransactionType.WITHDRAW).build());
+	}
+
+	public List<Transaction> transactionHistory(Account account) {
+
+		return account.getTransactions();
 	}
 
 }

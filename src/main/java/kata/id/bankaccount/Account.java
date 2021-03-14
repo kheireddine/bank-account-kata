@@ -1,44 +1,19 @@
 package kata.id.bankaccount;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-import kata.id.bankaccount.exception.InvalidAmountException;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class Account {
 
-	private BigDecimal balance = BigDecimal.ZERO;
+	private List<Transaction> transactions = new ArrayList<Transaction>();
 
-	public Account() {
-
-	}
-
-	public void deposit(BigDecimal amount) {
-		if (amount.longValue() <= 0) {
-			throw new InvalidAmountException("Invalid Amount");
-		}
-		this.balance = this.balance.add(amount);
-
-	}
-
-	public void withdraw(BigDecimal amount) {
-		if (amount.longValue() <= 0) {
-			throw new InvalidAmountException("Invalid Amount");
-		}
-
-		this.balance = this.balance.subtract(amount);
-	}
-
-	public void transfer(Account payee, BigDecimal amount) {
-		if (amount.longValue() <= 0) {
-			throw new InvalidAmountException("Invalid Amount");
-		}
-		this.withdraw(amount);
-		payee.deposit(amount);
-
-	}
-
-	public BigDecimal getBalance() {
-		return balance;
+	public void addTransaction(Transaction transaction) {
+		this.transactions.add(transaction);
 	}
 
 }

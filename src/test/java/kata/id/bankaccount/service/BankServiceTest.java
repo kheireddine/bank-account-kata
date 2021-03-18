@@ -1,4 +1,4 @@
-package kata.id.bankaccount;
+package kata.id.bankaccount.service;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,13 +8,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import kata.id.bankaccount.enums.TransactionType;
 import kata.id.bankaccount.exception.InvalidAmountException;
+import kata.id.bankaccount.model.Account;
+import kata.id.bankaccount.model.Transaction;
 
 public class BankServiceTest {
+
 	private BankService bankService = new BankService();
+
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
 
 	@Test
 	public void should_deposit_in_the_account() {
@@ -58,6 +68,7 @@ public class BankServiceTest {
 
 		// WHEN
 		bankService.deposit(account, BigDecimal.valueOf(-2));
+
 	}
 
 	@Test(expected = InvalidAmountException.class)
@@ -121,13 +132,28 @@ public class BankServiceTest {
 		assertEquals(5, transactionList.size());
 		assertEquals(BigDecimal.valueOf(100), transactionList.get(0).getAmount());
 		assertEquals(TransactionType.DEPOSIT, transactionList.get(0).getTransactionType());
-		
+
 		assertEquals(3, transactionList.stream().filter(tr -> tr.getTransactionType().equals(TransactionType.DEPOSIT))
 				.collect(Collectors.toList()).size());
-		
+
 		assertEquals(2, transactionList.stream().filter(tr -> tr.getTransactionType().equals(TransactionType.WITHDRAW))
 				.collect(Collectors.toList()).size());
 
 	}
+
+	@Test
+	public void should_throw_InvalidAmountException_with_invalid_amount_message() {
+
+		// GIVEN
+		Account account = new Account();
+		exception.expect(InvalidAmountException.class);
+		exception.expectMessage("Invalid Amount : -2");
+
+		// WHEN
+		bankService.deposit(account, BigDecimal.valueOf(-2));
+
+	}
+
+	
 
 }

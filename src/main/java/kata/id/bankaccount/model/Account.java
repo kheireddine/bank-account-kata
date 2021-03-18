@@ -1,4 +1,4 @@
-package kata.id.bankaccount;
+package kata.id.bankaccount.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Account {
 
-	private List<Transaction> transactions = new ArrayList<Transaction>();
+	private List<Transaction> transactions = new ArrayList<>();
 
 	public void addTransaction(Transaction transaction) {
 		this.transactions.add(transaction);

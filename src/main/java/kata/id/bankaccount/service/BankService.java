@@ -55,4 +55,21 @@ public class BankService {
 
 	}
 
+	public BigDecimal getBalance(Account account) {
+
+		BigDecimal totalDeposit = account.getTransactions().stream()
+				.filter(trasanction -> trasanction.getTransactionType().equals(TransactionType.DEPOSIT))
+				.map(Transaction::getAmount)
+				.reduce(BigDecimal::add)
+				.orElse(BigDecimal.ZERO);
+
+		BigDecimal totalWithraw = account.getTransactions().stream()
+				.filter(trasanction -> trasanction.getTransactionType().equals(TransactionType.WITHDRAW))
+				.map(Transaction::getAmount)
+				.reduce(BigDecimal::add)
+				.orElse(BigDecimal.ZERO);
+
+		return totalDeposit.subtract(totalWithraw);
+	}
+
 }

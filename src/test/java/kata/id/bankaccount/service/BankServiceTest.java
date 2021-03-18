@@ -154,6 +154,38 @@ public class BankServiceTest {
 
 	}
 
-	
+	@Test
+	public void should_return_balance_for_acount() {
+		// GIVEN
+		Account account = new Account();
+
+		bankService.deposit(account, BigDecimal.valueOf(250));
+		bankService.deposit(account, BigDecimal.valueOf(300));
+		bankService.deposit(account, BigDecimal.valueOf(550));
+
+		bankService.withdraw(account, BigDecimal.valueOf(200));
+		bankService.withdraw(account, BigDecimal.valueOf(170));
+		bankService.withdraw(account, BigDecimal.valueOf(230));
+
+		// WHEN
+		BigDecimal balance = bankService.getBalance(account);
+
+		// THEN
+		assertEquals(BigDecimal.valueOf(500), balance);
+
+	}
+
+	@Test
+	public void should_return_zero_when_no_transaction_found() {
+		// GIVEN
+		Account account = new Account();
+
+		// WHEN
+		BigDecimal balance = bankService.getBalance(account);
+
+		// THEN
+		assertEquals(BigDecimal.valueOf(0), balance);
+
+	}
 
 }

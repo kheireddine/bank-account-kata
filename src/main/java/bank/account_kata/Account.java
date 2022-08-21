@@ -5,7 +5,10 @@ import java.math.BigDecimal;
 public class Account {
 
 	private BigDecimal balance = BigDecimal.ZERO;
-
+	public BigDecimal getBalance() {
+		return balance;
+	}
+	
 	public Account() {
 
 	}
@@ -18,8 +21,14 @@ public class Account {
 
 	}
 
+	public void withdraw(BigDecimal amount) {
+		if (amount.longValue() <= 0) {
+			throw new NumberFormatException("Amount invalid");
+		}
 
-	public BigDecimal getBalance() {
-		return balance;
+		this.balance = this.balance.subtract(amount);
+		System.out.println(this.balance);
 	}
 }
+	
+
